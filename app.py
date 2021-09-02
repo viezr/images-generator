@@ -6,6 +6,7 @@ First masks folder used as base for others
 '''
 
 import os
+from threading import Thread
 from secrets import token_hex
 from PIL import Image
 
@@ -13,7 +14,8 @@ masks = []
 def prepare_func():
     '''
     Generate list of masks files in masks_dir and create current out folder.
-    Folder names important for merging and layer order (so masks list sorted)
+    Folder names important for merging and layer order (so masks list sorted).
+    Used fixed depth of folders: main masks folder / masks category folders.
     '''
     for mask_dir in sorted(os.listdir(masks_dir)):
         if len(os.listdir(masks_dir + mask_dir)):
@@ -42,15 +44,17 @@ def make_image(*args):
 def generate_images(mask_num = 0, *args):
     '''
     Recursion for all masks. Calls make_image for each iteration
-    First masks ignored and used as base for others
+    Each mask from first folder ignored and used as base for others
     '''
     if mask_num < len(masks):
         for i in masks[mask_num]:
             if len(args) > 1:
-                make_image(*args,i)
+                th = Thread(target=make_image, args=(*args,i))
+                th.start()
+                #make_image(*args,i)
             generate_images(mask_num + 1, *args, i)
 
-out_size = (256, 256)
+out_size = (1024, 1024)
 mask_size = (64, 64)
 center_xy = (int((out_size[0] - mask_size[0]) / 2), int((out_size[1] - mask_size[1]) / 2))
 
