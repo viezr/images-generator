@@ -116,7 +116,7 @@ def make_collection():
                 os.mkdir(coll_dir)
             os.rename(file.path, coll_dir + coll_img)
 
-            coll_text_name = collection["name_id"] + coll_id
+            coll_text_name = collection["name_id"] + str(coll_id)
             with open(coll_dir + coll_txt, "x") as f:
                 f.write(coll_text_name + "\n" + collection["description"])
 
@@ -133,7 +133,7 @@ def count_time():
     elif pass_time > 60:
         pass_time = "Program takes {:.2f} minutes".format(pass_time / 60)
     else:
-        pass_time "Program takes {:.2f} seconds".format(pass_time)
+        pass_time = "Program takes {:.2f} seconds".format(pass_time)
     print(pass_time)
 
 
