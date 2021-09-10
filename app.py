@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 '''
+Image generator
 Generate all variants of images combinations.
 First layer folder used as base for others.
 '''
@@ -21,9 +22,9 @@ out_ext = image_set["out_ext"]
 
 def initial_run():
     '''
-    Generate list of layers files in s_dir and create current out folder.
+    Generate list of layers files in layers_dir and create current out folder.
     Folder names does'n matter but important for sorting and merging order.
-    Layers list sorted. Empty dirs omitted
+    Layers list sorted. Empty dirs omitted.
     Used fixed depth of folders: main layers folder / layer folders.
     '''
     global center_xy, out_path
@@ -70,14 +71,14 @@ def make_image(*args):
 def generate_variants(mask_num = 0, *args):
     '''
     Recursion for all masks. Calls make_image for each iteration
-    Each mask from first folder ignored and used as base for others
+    Each mask from first layer folder ignored and used as base for others
     '''
     if mask_num < len(masks):
         for i in masks[mask_num]:
-            if main_set["locked_masks"] < 2:
+            if main_set["locked_layers"] < 2:
                 th_pool.append( Thread(target=make_image, args=(*args,i)) )
             else:
-                if len(args) > main_set["locked_masks"] - 2:
+                if len(args) > main_set["locked_layers"] - 2:
                     th_pool.append( Thread(target=make_image, args=(*args,i)) )
             generate_variants(mask_num + 1, *args, i)
 
@@ -89,7 +90,7 @@ def threads_run():
     for th in th_pool:
         th.start()
     for th in range(len(th_pool)):
-        print("\rGenerating:", th, "of", len(th_pool), "images...",
+        print("\rGenerating:", th + 1, "of", len(th_pool), "images...",
             end="", flush=True)
         th_pool[th].join()
     print("\n")

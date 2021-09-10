@@ -11,7 +11,7 @@ Main settings
 - gen_dir: random folder name for each generation inside out_dir
 '''
 main_set = {
-    "locked_masks": 2,
+    "locked_layers": 2,
     "layers_dir": "layers/",
     "out_dir": "out/",
     "gen_dir": token_hex(8) + "/",
